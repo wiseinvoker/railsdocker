@@ -36,7 +36,7 @@ blocks:
       prologue:
         commands:
           - 'checkout '
-          - cp env-example .env
+          - cp .env-example .env
           - cat docker-compose.test.yml | envsubst | tee docker-compose.yml
           - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
           - 'docker pull $DOCKER_USERNAME/dockerizing-ruby-drkiq:latest || true'
