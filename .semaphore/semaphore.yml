@@ -1,0 +1,29 @@
+version: v1.0
+name: Docker
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: docker build
+          commands:
+            - checkout
+            - docker build -t your-image .
+      secrets:
+        - name: dockerhub
+      prologue:
+        commands:
+          - checkout
+          - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
+          - 'Click on the build job, rename it to “Build drkiq”.'
+          - 'Type the following commands in the box:'
+          - 'docker pull $DOCKER_USERNAME/dockerizing-ruby-drkiq:latest || true'
+          - 'docker build -t $DOCKER_USERNAME/dockerizing-ruby-drkiq:latest --cache-from=$DOCKER_USERNAME/dockerizing-ruby-drkiq:latest --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f Dockerfile.production .'
+          - 'docker push $DOCKER_USERNAME/dockerizing-ruby-drkiq:latest'
+      agent:
+        machine:
+          type: e1-standard-2
+          os_image: ubuntu1804
